@@ -1,0 +1,15 @@
+*~
+*.pyc
+.DS_Store
+Makefile.in
+/aclocal.m4
+/autom4te.cache
+/build*
+/config.h.in
+/config.h
+/config.log
+/config.status
+/configure
+/m4
+/libtool
+/stamp-h1

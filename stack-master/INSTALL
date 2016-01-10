@@ -1,0 +1,82 @@
+Prerequisites
+-------------
+
+To build STACK from source code, you need to build Clang and LLVM
+version 3.4.  Using pre-built versions of Clang/LLVM is not recommended,
+because Stack relies on specific Clang/LLVM build options to help reduce
+false warnings.
+
+Roughly, you should do the following:
+
+	wget http://llvm.org/releases/3.4/llvm-3.4.src.tar.gz \
+	     http://llvm.org/releases/3.4/clang-3.4.src.tar.gz \
+	     http://llvm.org/releases/3.4/clang-tools-extra-3.4.src.tar.gz \
+	     http://llvm.org/releases/3.4/compiler-rt-3.4.src.tar.gz
+	tar zxf llvm-3.4.src.tar.gz
+	tar zxf clang-3.4.src.tar.gz -C llvm-3.4/tools
+	mv llvm-3.4/tools/clang{-3.4,}
+	tar zxf clang-tools-extra-3.4.src.tar.gz -C llvm-3.4/tools/clang/tools
+	mv llvm-3.4/tools/clang/tools/{clang-tools-extra-3.4,extra}
+	tar zxf compiler-rt-3.4.src.tar.gz -C llvm-3.4/projects
+	mv llvm-3.4/projects/compiler-rt{-3.4,}
+
+	mkdir build && cd build
+	../llvm-3.4/configure --enable-cxx11 --enable-targets=host \
+	                      --enable-bindings=none --enable-shared \
+	                      --enable-debug-symbols --enable-optimized
+	make
+	make install
+
+You need a compiler that supports C++11, such as gcc 4.7 or later.
+
+If you prefer to install Clang and LLVM in a directory other than
+/usr/local, also pass --prefix=... to its configure, and add that
+directory to your PATH.
+
+This will install Clang and LLVM.  To use them, prepend their bin
+directory to PATH.
+
+This roughly follows the build instructions from this page, except
+using Clang/LLVM 3.4 rather than checking out the code from svn:
+
+	http://clang.llvm.org/get_started.html
+
+
+STACK
+-----
+
+You need to choose an SMT solver for constraint solving.  The default
+one is Boolector, which is released under GPL.  If you need a more
+liberal license, see "Use other solvers".
+
+Build STACK in its source root directory.
+
+If building from git, first do:
+
+	$ autoreconf -fvi
+
+Then configure and make.
+
+	$ mkdir build
+	$ cd build
+	$ ../configure
+	$ make
+
+Finally, add `<STACK_ROOT>/build/bin` to PATH.
+
+
+Use other solvers
+-----------------
+
+By default, STACK links to the Boolector solver v1.5.116 [1], which
+is released under GPLv3.  If you want to use the MIT license, choose
+other solvers.
+
+One option is the STP solver [2], which uses the MIT license.
+Download and build STP, and you should get the executable `stp`.
+Then, add the following parameter to STACK's configure:
+
+	--with-smtlib="path/to/stp --SMTLIB2"
+
+[1] Boolector. http://fmv.jku.at/boolector/
+[2] STP. https://sites.google.com/site/stpfastprover/

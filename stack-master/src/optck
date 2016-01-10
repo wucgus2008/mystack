@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+DIR=$(dirname "${BASH_SOURCE[0]}")
+OPT="`llvm-config --bindir`/opt"
+exec ${OPT} --disable-output -load=${DIR}/../lib/liboptck.so \
+	-targetlibinfo -tbaa -basicaa -globalopt -sccp -deadargelim \
+	-basiccg -prune-eh -simplify-delete -load-elim \
+	-inline-only -functionattrs -argpromotion \
+	-strip-dead-prototypes \
+	-adce \
+	-elim-assert \
+	-bugon-null \
+	-bugon-gep \
+	-bugon-bounds \
+	-bugon-free \
+	-bugon-alias \
+	-bugon-int \
+	-bugon-libc -bugon-linux \
+	-ignore-bugon-post \
+	-anti-dce \
+	-anti-simplify \
+	-anti-algebra \
+	-show-bugon-true \
+	"$@" 2>&1

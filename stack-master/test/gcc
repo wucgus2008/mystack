@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+DIR=$(dirname "${BASH_SOURCE[0]}")
+"$DIR/cc1" "$@" > /dev/null
+
+EXE=$(basename "${BASH_SOURCE[0]}")
+export PATH=$(echo $PATH | sed -e "s/[^:]*://")
+"$EXE" "$@"
